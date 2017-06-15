@@ -47,6 +47,6 @@ var settings = {"api_key": "70fa9c87529dc0cd4e5dc150938f744e"};
 var response = function(res) { console.log(res); }
 var logError = function(err) { console.log(err); }
 
-indico.sentiment(['indico is so easy to use!', 'Still really easy, yiss'], settings)
+indico.sentiment(['indico is so shit!', 'Still really easy, yiss'], settings)
   .then(response)
   .catch(logError);
