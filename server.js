@@ -48,14 +48,30 @@ server.listen(port, () => console.log(`API running on localhost:${port}`));
 
 var settings = {"api_key": "70fa9c87529dc0cd4e5dc150938f744e"};
 
-var batchInput = [
-    "This app is so shit",
-    "I can't pay my bill",
-    "I can't login since new update",
-    "Keeps crashing everytime I try to pay bills",
-    "Great app! Best out of most telecoms",
-    "keeps showing an error on offers page"
-];
+const json = require('./feedback.json');
+
+var comments = new Map();
+var batchInput = [];
+
+for (var i in json) {
+
+    if (json[i].comments.toString().length > 0) {
+        comments[json[i]["responseId"]] = json[i].comments;
+        batchInput.push(json[i].comments)
+    }
+}
+
+
+// var batchInput = [
+//     "This app is so shit",
+//     "I can't pay my bill",
+//     "I can't login since new update",
+//     "Keeps crashing everytime I try to pay bills",
+//     "Great app! Best out of most telecoms",
+//     "keeps showing an error on offers page"
+// ];
+
+console.log(batchInput);
 
 const appSectionsDict = [
     "bill", "billing", "login", "usage", "data",
@@ -96,27 +112,35 @@ var keywordsResponse = function (res) {
         let keys = Object.keys(res[i]);
         for (var j = 0 ; j < keys.length; j++) {
             let key = keys[j];
+            // filter by negative words
             if (negativeKeywordsDict.indexOf(key.toString()) > -1) {
                 console.log("keyword found: " + key);
                 // write to json with negative keyword tag
             }
+            // filter by app sections
+            if (appSectionsDict.indexOf(key.toString()) > -1) {
+                console.log("section found: " + key)
+            }
+            // write to json with section tag
         }
     }
 }
 
+
+
 var logError = function(err) {
     console.log(err);
 }
-
-// indico.sentiment(batchInput, settings)
-//     .then(sentimentResponse)
-//     .catch(logError);
+//
+indico.sentiment(batchInput, settings)
+    .then(sentimentResponse)
+    .catch(logError);
 
 // indico.emotion(batchInput, settings)
 //     .then(emotionResponse)
 //     .catch(logError);
 
-indico.keywords(batchInput, settings)
-    .then(keywordsResponse)
-    .catch(logError);
+// indico.keywords(batchInput, settings)
+//     .then(keywordsResponse)
+//     .catch(logError);
 
